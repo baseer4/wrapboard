@@ -146,13 +146,14 @@ const Live = ({canvasRef} :props) => {
 
   return (
     <div
+      id="canvas"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       onPointerDown={handlePointerDown}
       onPointerUp = {handlePointerUp}
-      className="w-full h-[100vh] flex justify-center items-center text-center">
+      className="w-full h-[calc(100vh)] flex justify-center items-center text-center">
       
-      <canvas ref = {canvasRef}/>
+      <canvas ref= {canvasRef}/>
       {reaction.map((reaction,index) => (
           <FlyingReaction
           key={`${reaction.timestamp}-${index}`} 
