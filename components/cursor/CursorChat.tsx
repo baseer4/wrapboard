@@ -8,7 +8,7 @@ const CursorChat = ({cursor,cursorState,setCursorState,updateMyPresence}:CursorC
         setCursorState({
           mode:CursorMode.Chat,
           previousMessage:null,
-          message:e.target.value
+          message:e.target.value,
         })
   }
 
@@ -17,8 +17,9 @@ const CursorChat = ({cursor,cursorState,setCursorState,updateMyPresence}:CursorC
 
       setCursorState({
         mode:CursorMode.Chat,
+        //@ts-ignore
         previousMessage:cursorState?.message,
-        message:''
+        message:"",
       })
     } else if(e.key ==='Escape'){
       setCursorState({
@@ -35,7 +36,9 @@ const CursorChat = ({cursor,cursorState,setCursorState,updateMyPresence}:CursorC
           <>
             <CursorSVG color='#000' />
 
-            <div className='absolute left-2 top-5 bg-amber-500 px-4 py-2 text-sm text-white rounded-4xl'>
+            <div className='absolute left-2 top-5 bg-amber-500 px-4 py-2 text-sm text-white rounded-4xl'
+            // onKeyUp={(e)=>e.stopPropagation()}
+            >
               {cursorState.previousMessage && (
                 <div>{cursorState.previousMessage}</div>
               )}
