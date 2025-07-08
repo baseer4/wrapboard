@@ -7,7 +7,14 @@ import ReactionSelector from './reaction/ReactionButton';
 import FlyingReaction from './reaction/FlyingReaction';
 import useInterval from '@/hooks/useInterval';
 
-const Live = () => {
+// react mutalble object a special object in React used to hold a reference (a pointer) to a DOM element or any mutable value that doesn’t change across re-renders.
+
+
+type props = {
+  canvasRef: React.MutableRefObject<HTMLCanvasElement | null>;
+}
+
+const Live = ({canvasRef} :props) => {
     const others = useOthers();
     const [{cursor},updateMyPresence] = useMyPresence() as any;
 
@@ -145,9 +152,7 @@ const Live = () => {
       onPointerUp = {handlePointerUp}
       className="w-full h-[100vh] flex justify-center items-center text-center">
       
-      <h1 className="text-4xl text-white">
-        liveblocks ? working
-      </h1>
+      <canvas ref = {canvasRef}/>
       {reaction.map((reaction,index) => (
           <FlyingReaction
           key={`${reaction.timestamp}-${index}`} 
