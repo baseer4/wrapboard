@@ -83,7 +83,7 @@ const Live = () => {
     const handlePointerUp = useCallback((event: React.PointerEvent)=>{
           setCursorState((state: CursorState)=>
             cursorState.mode === CursorMode.Reaction ? {
-              ...state,isPressed:true
+              ...state,isPressed:false
             } :state
     )},[cursorState.mode,setCursorState]);
 
