@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import { RightSideBar } from "@/components/RightSideBar";
 import {fabric} from 'fabric'
 import { useEffect, useRef, useState } from "react";
-import { handleCanvaseMouseMove, handleCanvasMouseDown, handleCanvasMouseUp, handleResize, initializeFabric, renderCanvas } from "@/lib/canvas";
+import { handleCanvaseMouseMove, handleCanvasMouseDown, handleCanvasMouseUp, handleCanvasObjectModified, handleResize, initializeFabric, renderCanvas } from "@/lib/canvas";
 import { ActiveElement } from "@/types/type";
 import LeftSidebar from "@/components/LeftSidebar";
 import { useMutation, useStorage } from "@/liveblocks.config";
@@ -27,9 +27,34 @@ export default function Page() {
     value:'',
     icon:'',
   })
+
+  const deleteAllShapes =useMutation(({storage}) =>{
+      const canvasObjects = storage.get("canvasObjects");
+
+      if(!canvasObjects ||  canvasObjects.size === 0)
+        return true;
+      for (const [key,value] of canvasObjects.entries()){
+        canvasObjects.delete(key)
+      }
+      
+      return canvasObjects.size === 0;
+
+      
+  } ,[])
   
   const handleActiveElement = (elem : ActiveElement) =>{
     setActiveElement(elem)
+
+    switch (elem?.value){
+      case 'reset':
+         deleteAllShapes()
+         fabricRef.current?.clear();
+         setActiveElement(defaultNavElement)
+         break;
+
+       default:
+         break;
+    }
     selectedShapeRef.current = elem?.value as string;
   } ;
 
@@ -67,6 +92,13 @@ export default function Page() {
         activeObjectRef
       });
     });
+
+    canvas.on("object:modified",(options) =>{
+      handleCanvasObjectModified({
+        options,
+        syncShapeInStorage
+      })
+    })
     window.addEventListener("resize",()=>{
       handleResize({fabricRef})
     })
