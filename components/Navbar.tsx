@@ -9,7 +9,6 @@ import { ActiveElement, NavbarProps } from "@/types/type";
 import { Button } from "./ui/button";
 import ShapesMenu from "./ShapesMenu";
 import ActiveUsers from "./users/ActiveUsers";
-import { NewThread } from "./comments/NewThread";
 
 const Navbar = ({ activeElement, imageInputRef, handleImageUpload, handleActiveElement }: NavbarProps) => {
   const isActive = (value: string | Array<ActiveElement>) =>
@@ -29,7 +28,7 @@ const Navbar = ({ activeElement, imageInputRef, handleImageUpload, handleActiveE
               handleActiveElement(item);
             }}
             className={`group px-2.5 py-5 flex justify-center items-center
-            ${isActive(item.value) ? "invert" : "hover:bg-primary-grey-200"}
+            ${isActive(item.value) ? "" : "hover:bg-primary-grey-200"}
             `}
           >
             {Array.isArray(item.value) ? (
@@ -40,18 +39,6 @@ const Navbar = ({ activeElement, imageInputRef, handleImageUpload, handleActiveE
                 handleActiveElement={handleActiveElement}
                 handleImageUpload={handleImageUpload}
               />
-            ) : item?.value === "comments" ? (
-              // If value is comments, trigger the NewThread component
-              <NewThread>
-                <Button className="relative w-5 h-5 object-contain">
-                  <Image
-                    src={item.icon}
-                    alt={item.name}
-                    fill
-                    className={isActive(item.value) ? "invert" : ""}
-                  />
-                </Button>
-              </NewThread>
             ) : (
               <Button className="relative w-5 h-5 object-contain">
                 <Image
@@ -71,4 +58,4 @@ const Navbar = ({ activeElement, imageInputRef, handleImageUpload, handleActiveE
   );
 };
 
-export default memo(Navbar, (prevProps, nextProps) => prevProps.activeElement === nextProps.activeElement);
+export default memo(Navbar, (prevProps, nextProps) => prevProps.activeElement === nextProps.activeElement)
