@@ -9,6 +9,8 @@ import { handleCanvaseMouseMove, handleCanvasMouseDown, handleCanvasMouseUp, han
 import { ActiveElement } from "@/types/type";
 import LeftSidebar from "@/components/LeftSidebar";
 import { useMutation, useStorage } from "@/liveblocks.config";
+import { handleDelete } from "@/lib/key-events";
+import { defaultNavElement } from "@/constants";
 
 export default function Page() {
 
@@ -41,6 +43,11 @@ export default function Page() {
 
       
   } ,[])
+
+  const deleleShapeFromStorage =useMutation(({storage},objectId) =>{
+    const canvasObjects = storage.get("canvasObjects");
+    canvasObjects.delete(objectId);
+  },[])
   
   const handleActiveElement = (elem : ActiveElement) =>{
     setActiveElement(elem)
@@ -51,8 +58,12 @@ export default function Page() {
          fabricRef.current?.clear();
          setActiveElement(defaultNavElement)
          break;
+      case 'delete':
+        handleDelete(fabricRef.current as any,deleleShapeFromStorage)
+        setActiveElement(defaultNavElement)
+        break;
 
-       default:
+      default:
          break;
     }
     selectedShapeRef.current = elem?.value as string;
@@ -102,6 +113,9 @@ export default function Page() {
     window.addEventListener("resize",()=>{
       handleResize({fabricRef})
     })
+    return () =>{
+      canvas.dispose();
+    }
   }, [])
 
   useEffect(() => {
