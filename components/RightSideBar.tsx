@@ -69,6 +69,8 @@ export const RightSideBar = ({
         placeholder='stroke'
       />
       <Export />
+
+      
     </section>
   )
 }
