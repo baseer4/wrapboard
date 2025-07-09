@@ -8,17 +8,19 @@ import { useEffect, useRef, useState } from "react";
 import { handleCanvaseMouseMove, handleCanvasMouseDown, handleCanvasMouseUp, handleCanvasObjectModified, handleResize, initializeFabric, renderCanvas } from "@/lib/canvas";
 import { ActiveElement } from "@/types/type";
 import LeftSidebar from "@/components/LeftSidebar";
-import { useMutation, useStorage } from "@/liveblocks.config";
-import { handleDelete } from "@/lib/key-events";
+import { useMutation, useRedo, useStorage, useUndo } from "@/liveblocks.config";
+import { handleDelete, handleKeyDown } from "@/lib/key-events";
 import { defaultNavElement } from "@/constants";
 
 export default function Page() {
+  const undo = useUndo();
+  const redo = useRedo();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<fabric.Canvas | null>(null);
   const isDrawing = useRef(false);
   const shapeRef = useRef<fabric.Object | null>(null);
-  const selectedShapeRef = useRef<string |null >('rectangle');
+  const selectedShapeRef = useRef<string |null >(null);
   const activeObjectRef =useRef<fabric.Object | null>(null);
   const canvasObjects = useStorage((root) => root.canvasObjects);
 
@@ -44,7 +46,7 @@ export default function Page() {
       
   } ,[])
 
-  const deleleShapeFromStorage =useMutation(({storage},objectId) =>{
+  const deleteShapeFromStorage =useMutation(({storage},objectId) =>{
     const canvasObjects = storage.get("canvasObjects");
     canvasObjects.delete(objectId);
   },[])
@@ -59,7 +61,7 @@ export default function Page() {
          setActiveElement(defaultNavElement)
          break;
       case 'delete':
-        handleDelete(fabricRef.current as any,deleleShapeFromStorage)
+        handleDelete(fabricRef.current as any,deleteShapeFromStorage)
         setActiveElement(defaultNavElement)
         break;
 
@@ -72,7 +74,7 @@ export default function Page() {
   useEffect(() => {
     const canvas = initializeFabric({canvasRef,fabricRef})
     
-    canvas.on('mouse:down', (options) => {
+    canvas.on('mouse:down', (options :any) => {
       handleCanvasMouseDown({
         options,
         canvas,
@@ -82,7 +84,7 @@ export default function Page() {
       });
       
     })
-    canvas.on('mouse:move', (options) => {
+    canvas.on('mouse:move', (options :any) => {
       handleCanvaseMouseMove({
         options,
         canvas,
@@ -92,7 +94,7 @@ export default function Page() {
         syncShapeInStorage
       });
     });
-    canvas.on('mouse:up', (options) => {
+    canvas.on('mouse:up', (options :any) => {
       handleCanvasMouseUp({
         canvas,
         isDrawing,
@@ -104,15 +106,29 @@ export default function Page() {
       });
     });
 
-    canvas.on("object:modified",(options) =>{
+    canvas.on("object:modified",(options :any) =>{
       handleCanvasObjectModified({
         options,
         syncShapeInStorage
       })
     })
+
     window.addEventListener("resize",()=>{
       handleResize({fabricRef})
     })
+
+    window.addEventListener("keydown",(e:KeyboardEvent)=>{
+      handleKeyDown({
+        e,
+        canvas:fabricRef.current,
+        undo,
+        redo,
+        syncShapeInStorage,
+        deleteShapeFromStorage
+  
+      })
+  })
+
     return () =>{
       canvas.dispose();
     }
@@ -153,7 +169,8 @@ export default function Page() {
       />
 
       <section className="flex h-full flex-row">
-        <LeftSidebar/>
+        <LeftSidebar allShapes ={Array.from(canvasObjects.entries())}/>
+         {/* //array from used its map  */}
         <Live canvasRef={canvasRef}/>
         <RightSideBar/>
 
