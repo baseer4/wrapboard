@@ -15,8 +15,7 @@ type props = {
 }
 
 const Live = ({canvasRef} :props) => {
-    const others = useOthers();
-    const [{cursor},updateMyPresence] = useMyPresence() as any;
+    const [{cursor},updateMyPresence] = useMyPresence();
 
     const [reaction, setReaction] = useState<Reaction[]>([])
 
@@ -177,7 +176,7 @@ const Live = ({canvasRef} :props) => {
             setReaction={setReactions}
           />
         )}
-        <LiveCursor others ={others}/>
+        <LiveCursor />
     </div>
   )
 }
