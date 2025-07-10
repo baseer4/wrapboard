@@ -5,6 +5,7 @@ import Color from './settings/Color';
 import Export from './settings/Export';
 import { RightSidebarProps } from '@/types/type';
 import { modifyShape } from '@/lib/shapes';
+import KeybindingsButton from './KeybindingButton';
 
 export const RightSideBar = ({
   elementAttributes,
@@ -69,7 +70,7 @@ export const RightSideBar = ({
         placeholder='stroke'
       />
       <Export />
-
+      <KeybindingsButton />
       
     </section>
   )
