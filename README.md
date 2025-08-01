@@ -66,7 +66,7 @@
 ## Local Development
 1. Clone the repo
 ```
-git clone https://github.com/your-username/wrapboard.git
+git clone https://github.com/baseer4/wrapboard.git
 cd wrapboard
 ```
 2. Install dependencies
