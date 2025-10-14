@@ -2,6 +2,7 @@
 import Live from "@/components/Live";
 import "./globals.css"
 import Navbar from "@/components/Navbar";
+import FloatingBar from "@/components/FloatingBar";
 import { RightSideBar } from "@/components/RightSideBar";
 import {fabric} from 'fabric'
 import { useEffect, useRef, useState } from "react";
@@ -204,24 +205,25 @@ export default function Page() {
   
   return (
     <main className="h-screen overflow-hidden">
-      <Navbar  
-        activeElement={activeElement}
-        handleActiveElement={handleActiveElement}
-        imageInputRef={imageInputRef}
-        handleImageUpload={(e:any) =>{
-          e.stopPropagation();
-
-          handleImageUpload({
-            file : e.target.files[0],
-            canvas:fabricRef as any,
-            shapeRef,
-            syncShapeInStorage
-          })
-        }}
-      />
-
+      <Navbar />
+      
       <section className="flex h-full flex-row">
         <LeftSidebar allShapes ={Array.from(canvasObjects.entries())}/>
+        
+        <FloatingBar
+          activeElement={activeElement}
+          handleActiveElement={handleActiveElement}
+          imageInputRef={imageInputRef}
+          handleImageUpload={(e:any) =>{
+            e.stopPropagation();
+            handleImageUpload({
+              file : e.target.files[0],
+              canvas:fabricRef as any,
+              shapeRef,
+              syncShapeInStorage
+            })
+          }}
+        />
          {/* //array from used its map  */}
         <Live canvasRef={canvasRef}/>
         <RightSideBar

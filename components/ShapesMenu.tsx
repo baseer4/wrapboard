@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-
+import { cn } from "@/lib/utils";
 import { ShapesMenuProps } from "@/types/type";
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "./ui/dropdown-menu";
@@ -20,14 +20,17 @@ const ShapesMenu = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="no-ring">
-          <Button className="relative h-5 w-5 object-contain" onClick={() => handleActiveElement(item)}>
+          <div className="relative h-5 w-5" onClick={() => handleActiveElement(item)}>
             <Image
               src={isDropdownElem ? activeElement.icon : item.icon}
               alt={item.name}
               fill
-              className={isDropdownElem ? "invert" : ""}
+              className={cn(
+                "transition-all duration-200",
+                isDropdownElem ? "invert brightness-0" : ""
+              )}
             />
-          </Button>
+          </div>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="mt-5 flex flex-col gap-y-1 border-none bg-primary-black py-4 text-white">
@@ -37,9 +40,12 @@ const ShapesMenu = ({
               onClick={() => {
                 handleActiveElement(elem);
               }}
-              className={`flex h-fit justify-between gap-10 rounded-none px-5 py-3 focus:border-none ${
-                activeElement.value === elem?.value ? "bg-primary-green" : "hover:bg-primary-grey-200"
-              }`}
+              className={cn(
+                "flex h-fit justify-between gap-10 rounded-none px-5 py-3 focus:border-none transition-colors duration-200",
+                activeElement.value === elem?.value 
+                  ? "bg-primary-green/20 hover:bg-primary-green/30" 
+                  : "hover:bg-primary-grey-100/30"
+              )}
             >
               <div className="group flex items-center gap-2">
                 <Image
